@@ -7,6 +7,12 @@
 #include <cmath> 
 using namespace std;
 
+// ------------------------- Global Variables -------------------------
+string name, id, address;
+int age;
+char gender;
+double wage, rate;
+
 //---------------------Enumeration------------------------------------
 enum ConversionType {
       USD_TO_EUR = 1,
@@ -105,6 +111,37 @@ int main(){
 
 // ----------------------------------------------------------------
 
+void inputEmployeeData() {
+    cout << "Enter employee details:\n";
+    cout << "Name: ";
+    getline(cin >> ws, name);
+    cout << "ID: ";
+    getline(cin, id);
+    cout << "Address: ";
+    getline(cin, address);
+    cout << "Age: ";
+    cin >> age;
+    cout << "Gender (M/F): ";
+    cin >> gender;
+    cout << "Wage ($): ";
+    cin >> wage;
+    cout << "Rate (hours/days): ";
+    cin >> rate;
+}
+
+double calculateTax() {
+    double gross = wage * rate;
+    gender = toupper(gender);
+    
+    if (gender == 'M') {
+        return (gross > 1000) ? gross * 0.50 : gross * 0.30;
+    } else if (gender == 'F') {
+        return (gross > 1000) ? gross * 0.40 : gross * 0.20;
+    }
+    return 0.0;
+}
+
+
 void printLogo() {
       HANDLE consoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
       fstream file("logo.txt");  
@@ -150,6 +187,7 @@ cout << "----------------------------------" << endl;
 cout << "[1]. Currency Converter" << endl;
 cout << "[2]. Number Calculation" << endl;
 cout << "[3]. Calculation Num 1 -> n" << endl;
+cout << "[4]. Find Employee Salary" << endl;
 cout << "[0]. Exit" << endl;
 cout << "----------------------------------" << endl;
 }
@@ -311,6 +349,24 @@ void numberCalculation(){
         getch();
     } while (true);
 }
+void displayEmployees(){
+    inputEmployeeData();
+
+    double grossSalary = wage * rate;
+    double tax = calculateTax();
+    double netSalary = grossSalary - tax;
+
+    cout.precision(2);
+    cout << fixed;
+    
+    cout << "\n--- Employee Summary ---\n";
+    cout << "Name: " << name << "\nID: " << id 
+         << "\nAddress: " << address << "\nAge: " << age
+         << "\nGender: " << gender << "\nWage: $" << wage
+         << "\nRate: " << rate << "\nGross Salary: $" << grossSalary
+         << "\nTax: $" << tax << "\nNet Salary: $" << netSalary << endl;
+}
+
 void process(){
       while (true) {
             menu();
@@ -326,6 +382,9 @@ void process(){
                         break;
                   case 3:
                         calculationNum1ToN();
+                        break;
+                  case 4:
+                        displayEmployees();
                         break;
                   case 0:
                         cout << "Exiting the program..." << endl;
